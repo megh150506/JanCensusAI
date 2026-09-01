@@ -24,7 +24,8 @@ app = FastAPI(
 # CORS Middleware Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["*"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +33,7 @@ app.add_middleware(
 
 # Register All API Routers under prefix /api/v1
 API_V1_PREFIX = "/api/v1"
+
 
 app.include_router(ai_router, prefix=API_V1_PREFIX)
 app.include_router(citizen_router, prefix=API_V1_PREFIX)
