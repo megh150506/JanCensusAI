@@ -1,0 +1,41 @@
+# Environment & Secret Files
+.env
+.env*.local
+.env.production
+.env.development
+*.env
+
+# Dependencies
+node_modules/
+backend/venv/
+backend/.venv/
+backend/env/
+venv/
+.venv/
+env/
+
+# Next.js Build Outputs & Caches
+frontend/.next/
+frontend/out/
+frontend/build/
+.next/
+out/
+build/
+.next
+
+# Python Cache & Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+*.db
+*.sqlite3
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
