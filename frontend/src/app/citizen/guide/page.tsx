@@ -25,6 +25,8 @@ import {
 import confetti from "canvas-confetti";
 import { CitizenLayout } from "@/components/layout/CitizenLayout";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCensusStore, getLanguageName } from "@/store/useCensusStore";
+import { getTranslation } from "@/lib/translations";
 import { api, SelfEnumResponse } from "@/lib/api";
 
 interface FamilyMemberForm {
@@ -38,6 +40,7 @@ interface FamilyMemberForm {
 
 export default function SelfEnumerationPage() {
   const { user } = useAuthStore();
+  const { currentLanguage } = useCensusStore();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<SelfEnumResponse | null>(null);
@@ -124,8 +127,9 @@ export default function SelfEnumerationPage() {
       latrine_facility: latrineFacility,
       total_family_members: 1 + members.length,
       members: members,
-      preferred_language: "English"
+      preferred_language: getLanguageName(currentLanguage)
     };
+
 
     try {
       const res = await api.submitSelfEnumeration(payload);
@@ -177,10 +181,10 @@ export default function SelfEnumerationPage() {
               <span>Phase 1 Digital Self-Enumeration</span>
             </div>
             <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              Household Self-Enumeration Portal
+              {getTranslation(currentLanguage, "guideTitle")}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              Complete your questionnaire online in 3 simple steps to generate an instant QR Code for field enumerators.
+              {getTranslation(currentLanguage, "guideSub")}
             </p>
           </div>
 
@@ -194,9 +198,9 @@ export default function SelfEnumerationPage() {
         {step <= 3 && (
           <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
             {[
-              { num: 1, label: "Head & Address", icon: User },
-              { num: 2, label: "Housing & Amenities", icon: Home },
-              { num: 3, label: "Family Members", icon: Users }
+              { num: 1, label: getTranslation(currentLanguage, "step1Title"), icon: User },
+              { num: 2, label: getTranslation(currentLanguage, "step2Title"), icon: Home },
+              { num: 3, label: getTranslation(currentLanguage, "step3Title"), icon: Users }
             ].map((s) => {
               const Icon = s.icon;
               const isCurrent = step === s.num;

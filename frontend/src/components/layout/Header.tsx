@@ -13,10 +13,12 @@ import {
   SlidersHorizontal,
   FileCheck2,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Globe2
 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCensusStore, SUPPORTED_LANGUAGES } from "@/store/useCensusStore";
+import { getTranslation } from "@/lib/translations";
 
 const getInitials = (name?: string) => {
   if (!name) return "U";
@@ -70,7 +72,7 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-4">
         <div>
           <h1 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Welcome, {user?.name || "Citizen"}! <span className="animate-bounce">👋</span>
+            {getTranslation(currentLanguage, "headerWelcome")}, {user?.name || "Citizen"}! <span className="animate-bounce">👋</span>
           </h1>
           <p className="text-xs text-slate-500 font-medium">
             {user?.role === "admin"
@@ -82,13 +84,30 @@ export const Header: React.FC = () => {
 
       {/* Right Controls & Profile */}
       <div className="flex items-center gap-3">
+        {/* Header Language Selector Dropdown */}
+        <div className="hidden md:flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+          <Globe2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <select
+            value={currentLanguage}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+            aria-label="Select Language"
+          >
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.code} value={lang.code}>
+                {lang.name} ({lang.nativeName})
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Ask AI Assistant Floating Pill */}
         <button
           onClick={() => openAiDrawer()}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-xs font-semibold shadow-md shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
         >
           <Bot className="w-4 h-4" />
-          <span>Ask JanCensus AI</span>
+          <span>{getTranslation(currentLanguage, "headerAskAi")}</span>
           <Sparkles className="w-3 h-3 text-amber-300 animate-spin-slow" />
         </button>
 
@@ -111,8 +130,12 @@ export const Header: React.FC = () => {
           {isNotificationsOpen && (
             <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 py-3 z-50 animate-in fade-in slide-in-from-top-2">
               <div className="px-4 pb-2 border-b border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-bold uppercase text-slate-500 tracking-wider">Official Notices</span>
-                <span className="text-[11px] font-semibold text-emerald-600">Mark all read</span>
+                <span className="text-xs font-bold uppercase text-slate-500 tracking-wider">
+                  {getTranslation(currentLanguage, "headerNotices")}
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-600">
+                  {getTranslation(currentLanguage, "headerMarkRead")}
+                </span>
               </div>
               <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
                 {notifications.map((n) => (
@@ -155,7 +178,7 @@ export const Header: React.FC = () => {
                 <p className="text-xs font-bold text-slate-900">{user?.name || "Citizen User"}</p>
                 <p className="text-[11px] text-slate-500">{user?.emailOrPhone || "Verified Account"}</p>
                 <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                  <ShieldCheck className="w-3 h-3" /> Aadhaar OTP Verified
+                  <ShieldCheck className="w-3 h-3" /> {getTranslation(currentLanguage, "headerAadhaarVerified")}
                 </div>
               </div>
 
@@ -166,7 +189,7 @@ export const Header: React.FC = () => {
                   onClick={() => setIsProfileOpen(false)}
                 >
                   <User className="w-3.5 h-3.5 text-slate-500" />
-                  <span>My Profile</span>
+                  <span>{getTranslation(currentLanguage, "headerMyProfile")}</span>
                 </Link>
                 <Link
                   href="/login"
@@ -174,7 +197,7 @@ export const Header: React.FC = () => {
                   onClick={() => setIsProfileOpen(false)}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Settings</span>
+                  <span>{getTranslation(currentLanguage, "headerSettings")}</span>
                 </Link>
               </div>
 
@@ -187,7 +210,7 @@ export const Header: React.FC = () => {
                   className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span>Logout</span>
+                  <span>{getTranslation(currentLanguage, "headerLogout")}</span>
                 </button>
               </div>
             </div>
@@ -197,3 +220,4 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+

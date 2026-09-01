@@ -25,9 +25,10 @@ import { CitizenLayout } from "@/components/layout/CitizenLayout";
 import { useCensusStore } from "@/store/useCensusStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { api, StateSchedule } from "@/lib/api";
+import { getTranslation } from "@/lib/translations";
 
 export default function CitizenDashboard() {
-  const { openAiDrawer, selectedState, setSelectedState } = useCensusStore();
+  const { openAiDrawer, selectedState, setSelectedState, currentLanguage } = useCensusStore();
   const { user } = useAuthStore();
 
   const [scheduleData, setScheduleData] = useState<StateSchedule | null>(null);
@@ -83,8 +84,8 @@ export default function CitizenDashboard() {
 
   const quickActionCards = [
     {
-      title: "Check Schedule",
-      subtitle: "State & district timeline for Census 2027",
+      title: getTranslation(currentLanguage, "cardScheduleTitle"),
+      subtitle: getTranslation(currentLanguage, "cardScheduleSub"),
       href: "/citizen/schedule",
       icon: CalendarDays,
       color: "from-blue-600 to-indigo-600",
@@ -92,8 +93,8 @@ export default function CitizenDashboard() {
       badge: "2027 Timeline"
     },
     {
-      title: "Understand Phases",
-      subtitle: "Detailed breakdown of Phase 1 vs Phase 2",
+      title: getTranslation(currentLanguage, "cardPhasesTitle"),
+      subtitle: getTranslation(currentLanguage, "cardPhasesSub"),
       href: "/citizen/phases",
       icon: Layers,
       color: "from-emerald-600 to-teal-600",
@@ -101,8 +102,8 @@ export default function CitizenDashboard() {
       badge: "House Listing & Demographics"
     },
     {
-      title: "Self-Enumeration Guide",
-      subtitle: "Pre-fill questionnaire & generate SE-ID QR",
+      title: getTranslation(currentLanguage, "cardSelfEnumTitle"),
+      subtitle: getTranslation(currentLanguage, "cardSelfEnumSub"),
       href: "/citizen/guide",
       icon: FileCheck2,
       color: "from-amber-500 to-orange-600",
@@ -110,8 +111,8 @@ export default function CitizenDashboard() {
       badge: "Fast 2-Min Verification"
     },
     {
-      title: "Ask AI Assistant",
-      subtitle: "Grounded instant answers with JanCensus Mitra",
+      title: getTranslation(currentLanguage, "cardAiTitle"),
+      subtitle: getTranslation(currentLanguage, "cardAiSub"),
       onClick: () => openAiDrawer(),
       icon: Bot,
       color: "from-purple-600 to-fuchsia-600",
@@ -133,14 +134,14 @@ export default function CitizenDashboard() {
           <div className="relative z-10 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-xs font-semibold text-emerald-100 mb-4">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>India's 16th National Census • First Fully Digital Census</span>
+              <span>{getTranslation(currentLanguage, "heroBadge")}</span>
             </div>
 
             <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              Digitally Empowering Every Indian Citizen
+              {getTranslation(currentLanguage, "heroTitle")}
             </h2>
             <p className="mt-3 text-sm md:text-base text-emerald-100/90 leading-relaxed">
-              Participate in nation-building from the comfort of your home. Self-enumerate online, receive an instant verification QR Code, and ensure accurate representation.
+              {getTranslation(currentLanguage, "heroDesc")}
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -149,7 +150,7 @@ export default function CitizenDashboard() {
                 className="px-6 py-3 rounded-2xl bg-white text-emerald-900 font-bold text-xs shadow-lg hover:bg-emerald-50 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
               >
                 <FileCheck2 className="w-4 h-4 text-emerald-700" />
-                <span>Start Self-Enumeration Now</span>
+                <span>{getTranslation(currentLanguage, "heroStartSelfEnum")}</span>
                 <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
               </Link>
 
@@ -158,7 +159,7 @@ export default function CitizenDashboard() {
                 className="px-5 py-3 rounded-2xl bg-emerald-900/40 hover:bg-emerald-900/60 backdrop-blur-md border border-white/20 text-white font-bold text-xs transition-all flex items-center gap-2"
               >
                 <Bot className="w-4 h-4 text-emerald-300" />
-                <span>Explore with AI Mitra</span>
+                <span>{getTranslation(currentLanguage, "heroExploreAi")}</span>
               </button>
             </div>
           </div>
@@ -169,10 +170,10 @@ export default function CitizenDashboard() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                Citizen Action Hub
+                {getTranslation(currentLanguage, "actionHubTitle")}
               </h3>
               <p className="text-xs text-slate-500">
-                Key services and informational portals for Census of India 2027
+                {getTranslation(currentLanguage, "actionHubSub")}
               </p>
             </div>
           </div>
@@ -201,7 +202,7 @@ export default function CitizenDashboard() {
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-700 group-hover:text-emerald-600">
-                    <span>Access Feature</span>
+                    <span>{getTranslation(currentLanguage, "accessFeature")}</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -235,18 +236,18 @@ export default function CitizenDashboard() {
               <div className="flex items-center gap-2">
                 <CalendarDays className="w-5 h-5 text-emerald-600" />
                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-                  Census 2027 State Timeline Explorer
+                  {getTranslation(currentLanguage, "timelineTitle")}
                 </h3>
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Official Phase 1 (House Listing) and Phase 2 (Population Enumeration) schedules
+                {getTranslation(currentLanguage, "timelineSub")}
               </p>
             </div>
 
             {/* State Selector */}
             <div className="flex items-center gap-3">
               <label className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-emerald-600" /> State:
+                <MapPin className="w-3.5 h-3.5 text-emerald-600" /> {getTranslation(currentLanguage, "timelineStateLabel")}:
               </label>
               <select
                 value={selectedState}
@@ -276,21 +277,21 @@ export default function CitizenDashboard() {
               </div>
 
               <h4 className="text-base font-bold text-slate-900">
-                House Listing & Housing Census (HLH)
+                {getTranslation(currentLanguage, "phase1Title")}
               </h4>
               <p className="text-xs text-slate-600 mt-1">
-                Lists all housing structures, amenities, and drinking water/latrine facilities.
+                {getTranslation(currentLanguage, "phase1Sub")}
               </p>
 
               <div className="mt-4 space-y-2.5 text-xs bg-white/80 p-4 rounded-xl border border-emerald-200">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Digital Self-Enumeration Window:</span>
+                  <span className="text-slate-500">{getTranslation(currentLanguage, "phase1SelfEnumWindow")}</span>
                   <span className="font-bold text-emerald-700">
                     {scheduleData?.self_enumeration_window || "March 1 – March 31, 2027"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Field Surveyor Verification:</span>
+                  <span className="text-slate-500">{getTranslation(currentLanguage, "phase1FieldWindow")}</span>
                   <span className="font-bold text-slate-900">
                     {scheduleData?.phase1_houselisting_window || "April 1 – May 15, 2027"}
                   </span>
@@ -302,7 +303,7 @@ export default function CitizenDashboard() {
                   href="/citizen/guide"
                   className="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1"
                 >
-                  <span>Pre-Fill Household Details</span>
+                  <span>{getTranslation(currentLanguage, "phase1Action")}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -320,19 +321,19 @@ export default function CitizenDashboard() {
               </div>
 
               <h4 className="text-base font-bold text-slate-900">
-                Population Enumeration (PE)
+                {getTranslation(currentLanguage, "phase2Title")}
               </h4>
               <p className="text-xs text-slate-600 mt-1">
-                Comprehensive count of every individual, demographics, education, and occupation.
+                {getTranslation(currentLanguage, "phase2Sub")}
               </p>
 
               <div className="mt-4 space-y-2.5 text-xs bg-white/80 p-4 rounded-xl border border-slate-200">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Self-Enumeration Portal:</span>
+                  <span className="text-slate-500">{getTranslation(currentLanguage, "phase2PortalWindow")}</span>
                   <span className="font-bold text-slate-700">January 2028</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Physical Enumeration:</span>
+                  <span className="text-slate-500">{getTranslation(currentLanguage, "phase2FieldWindow")}</span>
                   <span className="font-bold text-slate-900">
                     {scheduleData?.phase2_population_enumeration_window || "Feb 9 – Feb 28, 2028"}
                   </span>
@@ -344,7 +345,7 @@ export default function CitizenDashboard() {
                   href="/citizen/phases"
                   className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1"
                 >
-                  <span>Learn about Phase 2 Questions</span>
+                  <span>{getTranslation(currentLanguage, "phase2Action")}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -359,10 +360,10 @@ export default function CitizenDashboard() {
               </div>
               <div>
                 <h5 className="text-xs font-bold text-slate-900">
-                  Your Information is 100% Statutorily Safe & Confidential
+                  {getTranslation(currentLanguage, "legalSafetyTitle")}
                 </h5>
                 <p className="text-[11px] text-slate-600">
-                  Under <strong>Section 15 of the Census Act 1948</strong>, individual records cannot be shared with police, courts, or tax authorities.
+                  {getTranslation(currentLanguage, "legalSafetyDesc")}
                 </p>
               </div>
             </div>
@@ -370,7 +371,7 @@ export default function CitizenDashboard() {
               href="/citizen/privacy"
               className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"
             >
-              <span>Read Legal Protections</span>
+              <span>{getTranslation(currentLanguage, "legalSafetyAction")}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -379,3 +380,4 @@ export default function CitizenDashboard() {
     </CitizenLayout>
   );
 }
+

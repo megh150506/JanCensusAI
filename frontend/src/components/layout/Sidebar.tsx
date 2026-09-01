@@ -22,13 +22,14 @@ import {
 } from "lucide-react";
 import { SUPPORTED_LANGUAGES, useCensusStore } from "@/store/useCensusStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { getTranslation, TranslationsMap } from "@/lib/translations";
 
 interface SidebarProps {
   role?: "citizen" | "admin";
 }
 
 interface NavItem {
-  name: string;
+  key: keyof TranslationsMap;
   href: string;
   icon: React.ElementType;
   badge?: string;
@@ -41,20 +42,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
   const { user, logout } = useAuthStore();
 
   const citizenNavItems: NavItem[] = [
-    { name: "Dashboard", href: "/citizen", icon: LayoutDashboard },
-    { name: "Census Phases", href: "/citizen/phases", icon: Layers },
-    { name: "State Schedule", href: "/citizen/schedule", icon: CalendarDays },
-    { name: "Self-Enumeration", href: "/citizen/guide", icon: FileCheck2, badge: "Phase 1" },
-    { name: "AI Assistant", href: "#ai", icon: Bot, isAction: true },
-    { name: "Fact Check", href: "/citizen/fact-check", icon: ShieldCheck, badge: "PIB Verified" },
-    { name: "Privacy & Safety", href: "/citizen/privacy", icon: UserCheck },
+    { key: "navDashboard", href: "/citizen", icon: LayoutDashboard },
+    { key: "navPhases", href: "/citizen/phases", icon: Layers },
+    { key: "navSchedule", href: "/citizen/schedule", icon: CalendarDays },
+    { key: "navSelfEnum", href: "/citizen/guide", icon: FileCheck2, badge: "Phase 1" },
+    { key: "navAiAssistant", href: "#ai", icon: Bot, isAction: true },
+    { key: "navFactCheck", href: "/citizen/fact-check", icon: ShieldCheck, badge: "PIB Verified" },
+    { key: "navPrivacy", href: "/citizen/privacy", icon: UserCheck },
   ];
 
   const adminNavItems: NavItem[] = [
-    { name: "Analytics Dashboard", href: "/admin", icon: BarChart3 },
-    { name: "State Schedules", href: "/citizen/schedule", icon: CalendarDays },
-    { name: "Citizen Preview", href: "/citizen", icon: LayoutDashboard },
-    { name: "Fact Check Monitor", href: "/citizen/fact-check", icon: ShieldCheck },
+    { key: "navAnalytics", href: "/admin", icon: BarChart3 },
+    { key: "navSchedule", href: "/citizen/schedule", icon: CalendarDays },
+    { key: "navCitizenPreview", href: "/citizen", icon: LayoutDashboard },
+    { key: "navFactCheckMonitor", href: "/citizen/fact-check", icon: ShieldCheck },
   ];
 
   const navItems: NavItem[] = role === "admin" ? adminNavItems : citizenNavItems;
@@ -79,7 +80,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
 
       {/* Role Badge Indicator */}
       <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Active Portal</span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+          {getTranslation(currentLanguage, "navActivePortal")}
+        </span>
         <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
           role === "admin" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"
         }`}>
@@ -92,17 +95,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+          const label = getTranslation(currentLanguage, item.key);
 
           if (item.isAction) {
             return (
               <button
-                key={item.name}
+                key={item.key}
                 onClick={() => openAiDrawer()}
                 className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-emerald-700 bg-emerald-50/80 hover:bg-emerald-100/80 group"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
-                  <span>{item.name}</span>
+                  <span>{label}</span>
                 </div>
                 <span className="flex items-center gap-1 text-[10px] font-bold uppercase bg-emerald-600 text-white px-2 py-0.5 rounded-full">
                   <Sparkles className="w-2.5 h-2.5" />
@@ -114,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
 
           return (
             <Link
-              key={item.name}
+              key={item.key}
               href={item.href}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
@@ -124,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
             >
               <div className="flex items-center gap-3">
                 <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
-                <span>{item.name}</span>
+                <span>{label}</span>
               </div>
               {item.badge && (
                 <span
@@ -146,14 +150,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
       <div className="px-4 py-3 border-t border-slate-100">
         <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
           <span className="flex items-center gap-1 font-medium">
-            <Globe2 className="w-3.5 h-3.5" /> Language
+            <Globe2 className="w-3.5 h-3.5" /> {getTranslation(currentLanguage, "navLanguage")}
           </span>
           <span className="font-semibold text-emerald-600">{SUPPORTED_LANGUAGES.find(l => l.code === currentLanguage)?.nativeName}</span>
         </div>
         <select
           value={currentLanguage}
           onChange={(e) => setLanguage(e.target.value)}
-          className="w-full text-xs bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+          className="w-full text-xs bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer font-medium"
         >
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option key={lang.code} value={lang.code}>
@@ -170,12 +174,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ role = "citizen" }) => {
             <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <PhoneCall className="w-3.5 h-3.5" />
             </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">National Helpline</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+              {getTranslation(currentLanguage, "navHelplineTitle")}
+            </span>
           </div>
           <p className="text-base font-extrabold tracking-wide">1800-11-2027</p>
-          <p className="text-[10px] text-slate-300 mt-0.5">Toll-free • 24x7 Multi-lingual</p>
+          <p className="text-[10px] text-slate-300 mt-0.5">
+            {getTranslation(currentLanguage, "navHelplineSub")}
+          </p>
         </div>
       </div>
     </aside>
   );
 };
+

@@ -17,8 +17,11 @@ import {
 } from "lucide-react";
 import { CitizenLayout } from "@/components/layout/CitizenLayout";
 import { api, RumorCheckResponse } from "@/lib/api";
+import { useCensusStore } from "@/store/useCensusStore";
+import { getTranslation } from "@/lib/translations";
 
 export default function FactCheckPage() {
+  const { currentLanguage } = useCensusStore();
   const [claimInput, setClaimInput] = useState("");
   const [claimedLocation, setClaimedLocation] = useState("Maharashtra");
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +59,8 @@ export default function FactCheckPage() {
     try {
       const res = await api.verifyRumor({
         claim: claimToTest,
-        claimed_location: claimedLocation
+        claimed_location: claimedLocation,
+        language: currentLanguage
       });
       setVerificationResult(res);
     } catch (err) {
@@ -91,14 +95,14 @@ export default function FactCheckPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-                  Census 2027 Misinformation & Fact-Check Unit
+                  {getTranslation(currentLanguage, "factCheckTitle")}
                 </h2>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                   PIB Verified
                 </span>
               </div>
               <p className="text-xs text-slate-500">
-                Verify viral WhatsApp rumors, claims, and social media messages against official legal provisions.
+                {getTranslation(currentLanguage, "factCheckSub")}
               </p>
             </div>
           </div>
@@ -107,13 +111,13 @@ export default function FactCheckPage() {
           <form onSubmit={(e) => handleVerify(e)} className="mt-6 space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                Paste Rumor or Claim to Fact-Check
+                {getTranslation(currentLanguage, "factCheckInputLabel")}
               </label>
               <textarea
                 rows={3}
                 value={claimInput}
                 onChange={(e) => setClaimInput(e.target.value)}
-                placeholder="e.g. Received a WhatsApp message saying enumerators are asking for bank passwords and charging 500 Rs..."
+                placeholder={getTranslation(currentLanguage, "factCheckPlaceholder")}
                 className="w-full text-xs bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none"
                 required
               />
@@ -133,12 +137,12 @@ export default function FactCheckPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Cross-referencing Official Records...</span>
+                    <span>{getTranslation(currentLanguage, "factCheckVerifying")}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 text-amber-300" />
-                    <span>Verify Claim Authenticity</span>
+                    <span>{getTranslation(currentLanguage, "factCheckButton")}</span>
                   </>
                 )}
               </button>
@@ -171,7 +175,15 @@ export default function FactCheckPage() {
                 ) : (
                   <AlertTriangle className="w-4 h-4 text-amber-600" />
                 )}
-                <span>Verdict: {verificationResult.verdict}</span>
+                <span>
+                  Verdict: {
+                    verificationResult.verdict === "FACT"
+                      ? getTranslation(currentLanguage, "verdictFact")
+                      : verificationResult.verdict === "MISINFORMATION"
+                      ? getTranslation(currentLanguage, "verdictMisinfo")
+                      : getTranslation(currentLanguage, "verdictPartial")
+                  }
+                </span>
               </div>
             </div>
 
@@ -222,7 +234,7 @@ export default function FactCheckPage() {
         {/* Popular Debunked Rumors Grid */}
         <div className="space-y-4">
           <h3 className="text-base font-bold text-slate-900">
-            Frequently Circulated Rumors & Clarifications
+            {getTranslation(currentLanguage, "factCheckSampleTitle")}
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -240,7 +252,9 @@ export default function FactCheckPage() {
                         : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {item.verdict}
+                    {item.verdict === "FACT"
+                      ? getTranslation(currentLanguage, "verdictFact")
+                      : getTranslation(currentLanguage, "verdictMisinfo")}
                   </span>
                   <Sparkles className="w-3.5 h-3.5 text-slate-300 group-hover:text-emerald-500 transition-colors" />
                 </div>
@@ -263,3 +277,4 @@ export default function FactCheckPage() {
     </CitizenLayout>
   );
 }
+

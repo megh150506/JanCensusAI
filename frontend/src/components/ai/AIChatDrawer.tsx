@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useCensusStore } from "@/store/useCensusStore";
 import { api } from "@/lib/api";
+import { getTranslation } from "@/lib/translations";
 
 export const AIChatDrawer: React.FC = () => {
   const {
@@ -104,14 +105,14 @@ export const AIChatDrawer: React.FC = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-sm">JanCensus AI Mitra</h3>
+                  <h3 className="font-bold text-sm">{getTranslation(currentLanguage, "aiAssistantTitle")}</h3>
                   <span className="text-[10px] font-bold bg-amber-400 text-slate-900 px-1.5 py-0.2 rounded-full uppercase">
                     2.5 Flash
                   </span>
                 </div>
                 <p className="text-[11px] text-emerald-100 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-ping inline-block" />
-                  Official Census 2027 Virtual Assistant
+                  {getTranslation(currentLanguage, "aiAssistantSub")}
                 </p>
               </div>
             </div>
@@ -136,7 +137,7 @@ export const AIChatDrawer: React.FC = () => {
           {/* Legal Safety Ribbon */}
           <div className="px-4 py-2 bg-emerald-50 border-b border-emerald-100 text-[11px] text-emerald-800 flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Grounded in statutory rules of <strong>Census Act 1948</strong>.</span>
+            <span>{getTranslation(currentLanguage, "aiLegalRibbon")}</span>
           </div>
 
           {/* Chat Messages Body */}
@@ -234,7 +235,9 @@ export const AIChatDrawer: React.FC = () => {
 
           {/* Quick Prompts Bar */}
           <div className="px-4 py-2 bg-slate-100/70 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto text-[11px] no-scrollbar">
-            <span className="font-semibold text-slate-500 text-[10px] uppercase shrink-0">Quick:</span>
+            <span className="font-semibold text-slate-500 text-[10px] uppercase shrink-0">
+              {getTranslation(currentLanguage, "aiQuickTitle")}
+            </span>
             <button
               onClick={() => handleSendMessage("What is Phase 1 vs Phase 2?")}
               className="bg-white hover:bg-emerald-50 border border-slate-200 text-slate-700 px-2.5 py-1 rounded-full whitespace-nowrap transition-colors"
@@ -268,7 +271,7 @@ export const AIChatDrawer: React.FC = () => {
                 type="text"
                 value={inputQuery}
                 onChange={(e) => setInputQuery(e.target.value)}
-                placeholder="Ask about Census 2027 phases, schedule, privacy..."
+                placeholder={getTranslation(currentLanguage, "aiPlaceholder")}
                 className="flex-1 text-xs bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
                 disabled={isLoading}
               />
@@ -286,3 +289,4 @@ export const AIChatDrawer: React.FC = () => {
     </div>
   );
 };
+

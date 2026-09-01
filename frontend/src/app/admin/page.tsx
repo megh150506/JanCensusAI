@@ -44,6 +44,8 @@ import {
 } from "recharts";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCensusStore, getLanguageName } from "@/store/useCensusStore";
+import { getTranslation } from "@/lib/translations";
 import {
   api,
   AnalyticsResponse,
@@ -56,6 +58,7 @@ const MISINFO_COLORS = ["#EF4444", "#F59E0B", "#10B981"];
 
 export default function AdminDashboardPage() {
   const { user } = useAuthStore();
+  const { currentLanguage } = useCensusStore();
 
   const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
   const [selectedState, setSelectedState] = useState("Maharashtra");
@@ -66,11 +69,15 @@ export default function AdminDashboardPage() {
   const [campaignTopic, setCampaignTopic] = useState("Launch of Self-Enumeration Portal in Pune District");
   const [campaignRegion, setCampaignRegion] = useState("Maharashtra - Pune");
   const [campaignAudience, setCampaignAudience] = useState("Urban & Suburban Residents");
-  const [campaignLanguage, setCampaignLanguage] = useState("English & Marathi");
+  const [campaignLanguage, setCampaignLanguage] = useState(getLanguageName(currentLanguage));
   const [campaignTone, setCampaignTone] = useState("Official, encouraging, and clear");
   const [isGeneratingCampaign, setIsGeneratingCampaign] = useState(false);
   const [campaignResult, setCampaignResult] = useState<CampaignResponse | null>(null);
   const [copiedTab, setCopiedTab] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCampaignLanguage(getLanguageName(currentLanguage));
+  }, [currentLanguage]);
 
   useEffect(() => {
     async function loadAnalytics() {
@@ -95,7 +102,7 @@ export default function AdminDashboardPage() {
         topic: campaignTopic,
         target_region: campaignRegion,
         target_audience: campaignAudience,
-        language: campaignLanguage,
+        language: campaignLanguage || getLanguageName(currentLanguage),
         tone: campaignTone,
       };
       const res = await api.generateCampaign(payload);
@@ -112,6 +119,7 @@ export default function AdminDashboardPage() {
     setCopiedTab(type);
     setTimeout(() => setCopiedTab(null), 2000);
   };
+
 
   // Mock Recharts Datasets
   const enumerationProgressData = [
